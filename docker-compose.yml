@@ -3,6 +3,7 @@ services:
     build: .
     container_name: php_tdd_workshop
     hostname: php
+    user: ${UID}:${GID}
     volumes:
       - .:/srv/php-tdd-workshop:delegated
     environment:
