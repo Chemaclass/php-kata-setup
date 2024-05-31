@@ -1,16 +1,14 @@
-FROM php:8.3-fpm
+FROM php:8.3
 
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y git zip
+RUN apt-get update
+RUN apt-get install -y git zip
 
-RUN pecl install -o -f xdebug \
-    && rm -rf /tmp/pear \
-    && docker-php-ext-enable xdebug
+RUN pecl install -o -f xdebug
+RUN docker-php-ext-enable xdebug
 
-COPY --from=composer /usr/bin/composer /usr/bin/composer
-RUN useradd -m dev
-
-RUN echo 'memory_limit = 2048M' >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini
+RUN curl https://getcomposer.org/composer.phar -o /usr/bin/composer
+RUN chmod +x /usr/bin/composer
 
 WORKDIR /srv/php-tdd-workshop
+
+CMD ["sh", "-c", "composer install --no-interaction && composer test"]
